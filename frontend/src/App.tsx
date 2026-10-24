@@ -1,0 +1,76 @@
+import { useEffect, useState } from 'react'
+import { Activity, AlertCircle, ArrowDownRight, ArrowRight, BookOpen, Boxes, Bug, ChevronDown, ChevronRight, CircleHelp, Clock3, Code2, FileCode2, FlaskConical, FolderGit2, Gauge, GitBranch, Layers3, ListChecks, LockKeyhole, Menu, MoreHorizontal, Plus, Search, Settings2, Shield, ShieldCheck, Sparkles, TerminalSquare, X } from 'lucide-react'
+import { api } from './lib/api'
+import type { Project } from './types'
+
+const navGroups = [
+  { label: 'WORKSPACE', items: [['Overview', Gauge], ['Projects', Boxes], ['API Explorer', Activity], ['Test Lab', FlaskConical], ['Test Runs', ListChecks]] },
+  { label: 'INVESTIGATE', items: [['Security Center', Shield], ['Findings', Bug], ['Business Logic', Layers3], ['AI Repair', Sparkles], ['Reports', BookOpen]] },
+] as const
+
+export default function App() {
+  const [page, setPage] = useState('Overview')
+  const [projects, setProjects] = useState<Project[]>([])
+  const [selected, setSelected] = useState<Project | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [modal, setModal] = useState(false)
+  const [consoleOpen, setConsoleOpen] = useState(true)
+  const [explorerOpen, setExplorerOpen] = useState(true)
+  const [evidenceOpen, setEvidenceOpen] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  const refresh = async () => {
+    setLoading(true); setError('')
+    try { const rows = await api.projects(); setProjects(rows); setSelected(current => rows.find(p => p.id === current?.id) || rows[0] || null) }
+    catch (e) { setError(e instanceof Error ? e.message : 'Could not connect to the API') }
+    finally { setLoading(false) }
+  }
+  useEffect(() => { void refresh() }, [])
+
+  async function createProject(data: { name: string; description: string; repository_url: string }) {
+    setSaving(true); setError('')
+    try { const project = await api.createProject({ ...data, repository_url: data.repository_url || undefined }); setProjects(rows => [project, ...rows]); setSelected(project); setPage('Overview'); setModal(false) }
+    catch (e) { setError(e instanceof Error ? e.message : 'Project could not be created') }
+    finally { setSaving(false) }
+  }
+
+  return <div className="app-shell">
+    <header className="topbar"><button className="brand" onClick={() => setPage('Overview')}><span className="brand-mark"><ShieldCheck size={19}/></span><span>failproof<span className="brand-ai"> AI</span></span></button><div className="top-divider"/><button className="project-switcher" onClick={() => setExplorerOpen(v => !v)}><span className="switcher-icon"><FolderGit2 size={15}/></span><span>{selected?.name || 'Select a project'}</span><ChevronDown size={14}/></button><div className="top-spacer"/><div className="crumb"><span>Workspace</span><ChevronRight size={13}/><strong>{page}</strong></div><div className="top-spacer"/><button className="search-button"><Search size={15}/><span>Search anything</span><kbd>⌘ K</kbd></button><button className="icon-button" aria-label="Help"><CircleHelp size={17}/></button><button className="avatar">A</button></header>
+    <div className="body-layout">
+      <aside className={`sidebar ${explorerOpen ? '' : 'sidebar-hidden'}`}>
+        <div className="sidebar-heading"><span>WORKSPACE</span><button className="tiny-icon" onClick={() => setExplorerOpen(false)} aria-label="Collapse sidebar"><Menu size={15}/></button></div>
+        {navGroups.map(group => <section className="nav-group" key={group.label}><div className="group-label">{group.label}</div>{group.items.map(([name, Icon]) => <button key={name} className={`nav-item ${page === name ? 'active' : ''}`} onClick={() => setPage(name)}><Icon size={16}/><span>{name}</span>{name === 'Overview' && <span className="nav-active-dot"/>}</button>)}</section>)}
+        <div className="nav-group"><div className="group-label">PREFERENCES</div><button className={`nav-item ${page === 'Settings' ? 'active' : ''}`} onClick={() => setPage('Settings')}><Settings2 size={16}/><span>Settings</span></button></div>
+        <div className="explorer-section"><div className="explorer-title"><span>PROJECT EXPLORER</span><button className="tiny-icon" onClick={() => setModal(true)} aria-label="Create project"><Plus size={15}/></button></div>
+          <div className="tree-label"><ChevronDown size={13}/><FolderGit2 size={14}/><span>Projects</span><span className="count">{projects.length}</span></div>
+          {loading ? <div className="tree-muted">Loading projects…</div> : projects.length ? projects.map(project => <button className={`project-tree-item ${selected?.id === project.id ? 'selected' : ''}`} key={project.id} onClick={() => { setSelected(project); setPage('Overview') }}><span className="tree-dot"/><span>{project.name}</span></button>) : <div className="tree-muted">No projects yet</div>}
+        </div>
+        <div className="sidebar-bottom"><div className="connection"><span className={`connection-dot ${error ? 'offline' : ''}`}/><span>{error ? 'API unavailable' : loading ? 'Connecting…' : 'Local workspace'}</span></div><div className="sidebar-user"><div className="user-avatar">A</div><div><strong>Adith</strong><small>Personal workspace</small></div><MoreHorizontal size={17}/></div></div>
+      </aside>
+      <main className="main-area"><div className="main-scroll"><div className="page-content">
+        {error && <div className="error-banner"><AlertCircle size={16}/><span>{error}</span><button onClick={() => void refresh()}>Retry</button><button className="close-error" onClick={() => setError('')}><X size={14}/></button></div>}
+        <div className="page-title-row"><div><div className="eyebrow"><span className="eyebrow-mark"/>VERIFICATION WORKBENCH</div><h1>{page}</h1><p className="subtitle">{page === 'Overview' ? 'A clear view of your projects and their verification status.' : `Explore ${page.toLowerCase()} in your engineering workspace.`}</p></div><div className="title-actions"><button className="button secondary" onClick={() => void refresh()}><Activity size={15}/>Refresh</button><button className="button primary" onClick={() => setModal(true)}><Plus size={16}/>New project</button></div></div>
+        {page === 'Overview' ? <>{selected ? <><div className="project-banner"><div className="project-symbol"><Code2 size={21}/></div><div className="project-info"><div className="project-name-line"><h2>{selected.name}</h2><span className="status-chip"><span/>Active project</span></div><p>{selected.description || 'No project description provided.'}</p></div><button className="icon-button project-menu" aria-label="Project options"><MoreHorizontal size={19}/></button><div className="project-meta"><span><Clock3 size={14}/>Added {new Date(selected.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>{selected.repository_url && <a href={selected.repository_url} target="_blank" rel="noreferrer"><GitBranch size={14}/>Repository <ArrowDownRight size={13}/></a>}</div></div>
+          <div className="section-heading"><div><h3>Verification status</h3><p>Evidence-backed activity for this project</p></div><span className="quiet-label">PHASE 1</span></div>
+          <div className="status-grid"><div className="status-card"><div className="status-card-top"><span className="metric-icon neutral"><FlaskConical size={17}/></span><span className="small-label">TEST RUNS</span></div><div className="empty-metric">—</div><div className="metric-caption">No tests have been run</div><div className="card-footnote"><span className="muted-dot"/>Awaiting test configuration</div></div><div className="status-card"><div className="status-card-top"><span className="metric-icon amber"><Bug size={17}/></span><span className="small-label">FINDINGS</span></div><div className="empty-metric">—</div><div className="metric-caption">No findings recorded</div><div className="card-footnote"><span className="muted-dot"/>Nothing has been analyzed</div></div><div className="status-card"><div className="status-card-top"><span className="metric-icon blue"><ShieldCheck size={17}/></span><span className="small-label">VERIFICATION</span></div><div className="empty-metric word">Not assessed</div><div className="metric-caption">No verification evidence</div><div className="card-footnote"><span className="muted-dot"/>Status reflects actual runs</div></div></div>
+          <div className="section-heading activity-heading"><div><h3>Project activity</h3><p>Recent work and execution events</p></div><button className="text-button" onClick={() => setPage('Test Runs')}>View runs <ArrowRight size={14}/></button></div><div className="activity-empty"><div className="empty-icon"><TerminalSquare size={20}/></div><div><strong>No activity yet</strong><p>Execution events and evidence will appear here as you investigate this project.</p></div></div>
+          <div className="next-step"><div className="next-icon"><Sparkles size={18}/></div><div><strong>Set up your first investigation</strong><p>Connect an API specification or add a test suite to begin collecting evidence.</p></div><button onClick={() => setPage('API Explorer')}>Explore API tools <ArrowRight size={14}/></button></div>
+        </> : null}
+        {!selected && !loading && !error && <div className="welcome-panel"><div className="welcome-art"><div className="welcome-ring ring-one"/><div className="welcome-ring ring-two"/><div className="welcome-core"><ShieldCheck size={29}/></div></div><span className="welcome-kicker">YOUR WORKSPACE IS READY</span><h2>Start with a project</h2><p>Create a project to organize your APIs, tests, findings, and evidence in one place.</p><button className="button primary" onClick={() => setModal(true)}><Plus size={16}/>Create your first project</button></div>}
+        {page === 'Overview' && !selected && !loading && <div className="below-welcome"><div><span className="quiet-label">EVIDENCE FIRST</span><p>Findings and repairs will only be marked verified when execution produces supporting evidence.</p></div><ShieldCheck size={19}/></div>}
+        </> : <div className="empty-workspace"><div className="empty-icon large"><Code2 size={23}/></div><h2>{page}</h2><p>This workspace is ready for the next phase. Project data and verified execution records will appear here when this capability is implemented.</p><button className="button secondary" onClick={() => setPage('Overview')}>Back to overview <ArrowRight size={14}/></button></div>}
+      </div></div>
+      <div className={`console ${consoleOpen ? 'console-open' : 'console-closed'}`}><button className="console-header" onClick={() => setConsoleOpen(v => !v)}><span className="console-title"><TerminalSquare size={15}/><strong>Execution console</strong><span className="console-count">0</span></span><span className="console-right"><span className="console-idle"><span/>Idle</span><ChevronDown className={consoleOpen ? '' : 'chevron-closed'} size={15}/></span></button>{consoleOpen && <div className="console-body"><div className="console-prompt"><span className="prompt-mark">›</span><span>Execution output will appear here when a test or analysis is run.</span><span className="console-time">—</span></div><div className="console-hint"><span>READY</span><span>Structured events · Test output · Verification evidence</span></div></div>}</div>
+      </main>
+      <aside className={`evidence-panel ${evidenceOpen ? '' : 'evidence-hidden'}`}><div className="evidence-header"><div><span className="evidence-kicker">INSPECTOR</span><h3>Evidence</h3></div><button className="tiny-icon" onClick={() => setEvidenceOpen(false)} aria-label="Collapse evidence panel"><X size={15}/></button></div>{selected ? <div className="evidence-content"><div className="inspector-empty"><div className="inspector-icon"><FileCode2 size={19}/></div><strong>No evidence selected</strong><p>Select a finding or execution event to inspect its supporting evidence.</p></div><div className="inspector-section"><span>PROJECT CONTEXT</span><div className="context-row"><span className="context-icon"><FolderGit2 size={14}/></span><div><strong>{selected.name}</strong><small>Project</small></div></div>{selected.repository_url && <div className="context-row"><span className="context-icon"><GitBranch size={14}/></span><div><strong>Repository linked</strong><small>Source reference</small></div></div>}</div><div className="inspector-section"><span>VERIFICATION</span><div className="evidence-note"><LockKeyhole size={15}/><p>Verification requires a completed execution with recorded evidence.</p></div></div></div> : <div className="evidence-no-project"><FileCode2 size={21}/><p>Choose a project to view its context.</p></div>}<div className="evidence-footer"><span><span className="footer-dot"/>Evidence integrity</span><strong>Enforced</strong></div></aside>
+    </div>
+    {(!explorerOpen || !evidenceOpen) && <div className="panel-reopen">{!explorerOpen && <button onClick={() => setExplorerOpen(true)}><Menu size={14}/> Explorer</button>}{!evidenceOpen && <button onClick={() => setEvidenceOpen(true)}><FileCode2 size={14}/> Evidence</button>}</div>}
+    {modal && <ProjectModal onClose={() => setModal(false)} onSubmit={createProject} saving={saving}/>}
+  </div>
+}
+
+function ProjectModal({ onClose, onSubmit, saving }: { onClose: () => void; onSubmit: (data: { name: string; description: string; repository_url: string }) => void; saving: boolean }) {
+  const [name, setName] = useState(''); const [description, setDescription] = useState(''); const [repository, setRepository] = useState(''); const [formError, setFormError] = useState('')
+  return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) onClose() }}><form className="modal" onSubmit={e => { e.preventDefault(); if (!name.trim()) { setFormError('Project name is required.'); return } if (repository && !/^https?:\/\//i.test(repository)) { setFormError('Repository URL must start with http:// or https://.'); return } setFormError(''); onSubmit({ name: name.trim(), description, repository_url: repository.trim() }) }}><div className="modal-top"><div className="modal-symbol"><FolderGit2 size={18}/></div><button type="button" className="tiny-icon" onClick={onClose} aria-label="Close"><X size={16}/></button></div><h2>Create a project</h2><p className="modal-subtitle">Organize investigations and verification evidence for a codebase.</p><label>Project name <span>*</span><input autoFocus maxLength={100} value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Payments API"/></label><label>Description <small>OPTIONAL</small><textarea maxLength={2000} value={description} onChange={e => setDescription(e.target.value)} placeholder="What does this project do?" rows={3}/></label><label>Repository URL <small>OPTIONAL</small><input type="url" value={repository} onChange={e => setRepository(e.target.value)} placeholder="https://github.com/org/repository"/></label>{formError && <div className="form-error"><AlertCircle size={14}/>{formError}</div>}<div className="modal-actions"><button type="button" className="button secondary" onClick={onClose}>Cancel</button><button className="button primary" disabled={saving}><Plus size={15}/>{saving ? 'Creating…' : 'Create project'}</button></div></form></div>
+}
