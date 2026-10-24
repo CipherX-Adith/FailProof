@@ -1,0 +1,19 @@
+
+> failproof-ai-frontend@0.1.0 dev
+> vite --host 127.0.0.1 --port 5173
+
+
+  VITE v6.4.5  ready in 676 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+  ➜  press h + enter to show help
+1:45:08 am [vite] vite.config.ts changed, restarting server...
+1:45:08 am [vite] server restarted.
+1:47:20 am [vite] vite.config.ts changed, restarting server...
+1:47:20 am [vite] vite.config.ts changed, restarting server...
+1:47:20 am [vite] server restarted.
+1:47:27 am [vite] vite.config.ts changed, restarting server...
+1:47:27 am [vite] server restarted.
+1:47:44 am [vite] vite.config.ts changed, restarting server...
+1:47:44 am [vite] vite.config.ts changed, restarting server...
+1:47:45 am [vite] server restarted.

@@ -1,0 +1,11 @@
+INFO:     Started server process [29276]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18000 (Press CTRL+C to quit)
+2026-10-25 01:20:39,031 INFO app.api.routes Project created: 1adea131-604d-4539-9a8a-55b0a9b4c7bd
+2026-10-25 01:20:39,386 INFO httpx HTTP Request: GET http://127.0.0.1:8765/health "HTTP/1.1 200 OK"
+2026-10-25 01:20:39,413 INFO httpx HTTP Request: GET http://127.0.0.1:8765/users/alice/documents/bob-private "HTTP/1.1 200 OK"
+2026-10-25 01:20:39,435 INFO httpx HTTP Request: OPTIONS http://127.0.0.1:8765/health "HTTP/1.1 405 Method Not Allowed"
+2026-10-25 01:20:39,506 INFO httpx HTTP Request: POST http://127.0.0.1:8765/orders/negative-ffe26e21/capture "HTTP/1.1 201 Created"
+2026-10-25 01:20:39,549 INFO httpx HTTP Request: POST http://127.0.0.1:8765/orders/order-ffe26e21/capture "HTTP/1.1 201 Created"
+2026-10-25 01:20:39,566 INFO httpx HTTP Request: POST http://127.0.0.1:8765/orders/order-ffe26e21/capture "HTTP/1.1 200 OK"

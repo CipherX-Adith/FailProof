@@ -13,9 +13,12 @@ DEMO_ORIGIN = "http://127.0.0.1:8765"
 MAX_RESPONSE_BYTES = 64 * 1024
 MAX_REQUEST_BYTES = 64 * 1024
 TIMEOUT_SECONDS = 3.0
+CAPTURE_RESPONSE_HEADERS = ("content-type", "x-content-type-options", "x-frame-options", "content-security-policy", "strict-transport-security", "cache-control")
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 SENSITIVE = re.compile(r"authorization|\bauth\b|credential|cookie|token|secret|password|api[_-]?key|session", re.I)
 BEARER = re.compile(r"(?i)\b(bearer)\s+[A-Za-z0-9._~+/=-]+")
+SECRET_VALUE = re.compile(r"(?i)((?:token|password|secret|api[_-]?key|authorization)\s*[=:]\s*)(['\"]?)[^\s,'\";]+")
+USERINFO = re.compile(r"(https?://)[^/@\s]+:[^/@\s]+@")
 
 
 class TargetBlocked(ValueError):
@@ -38,7 +41,9 @@ def _redact(value):
     if isinstance(value, list):
         return [_redact(item) for item in value]
     if isinstance(value, str):
-        return BEARER.sub(r"\1 [REDACTED]", value)[:MAX_RESPONSE_BYTES]
+        safe = USERINFO.sub(r"\1[REDACTED]@", value)
+        safe = BEARER.sub(r"\1 [REDACTED]", safe)
+        return SECRET_VALUE.sub(r"\1[REDACTED]", safe)[:MAX_RESPONSE_BYTES]
     return value
 
 
@@ -128,7 +133,7 @@ def execute_case(target: ApiTarget, endpoint: ApiEndpoint, case: GeneratedTest, 
                     parsed_body = json.loads(response_body) if response_body else None
                 except (json.JSONDecodeError, UnicodeDecodeError):
                     parsed_body = response_body.decode("utf-8", errors="replace")
-                captured.append({"status": response.status_code, "headers": {key: response.headers[key] for key in ("content-type",) if key in response.headers}, "body": _redact(parsed_body)})
+                captured.append({"status": response.status_code, "headers": {key: response.headers[key] for key in CAPTURE_RESPONSE_HEADERS if key in response.headers}, "body": _redact(parsed_body)})
                 response.close()
         duration = round((time.perf_counter() - started) * 1000, 2)
         passed = _expected(statuses, case.expected_statuses)

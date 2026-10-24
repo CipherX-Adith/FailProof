@@ -1,0 +1,3 @@
+# Optional security-scanning tools. Install explicitly; scan execution never installs packages.
+bandit>=1.8,<2.0
+pip-audit>=2.7,<3.0

@@ -1,0 +1,12 @@
+2:09:33 am [vite] http proxy error: /api/projects
+Error: connect ECONNREFUSED 127.0.0.1:18001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16)
+2:09:33 am [vite] http proxy error: /api/projects
+Error: connect ECONNREFUSED 127.0.0.1:18001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16)
+2:09:34 am [vite] http proxy error: /api/projects
+Error: connect ECONNREFUSED 127.0.0.1:18001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16)
+2:09:34 am [vite] http proxy error: /api/projects
+Error: connect ECONNREFUSED 127.0.0.1:18001
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16)

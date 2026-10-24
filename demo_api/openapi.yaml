@@ -77,6 +77,13 @@ paths:
               properties:
                 amount: {type: integer, minimum: 1, example: 10}
       x-failproof-test-cases:
+        - name: Reject negative synthetic amount
+          category: negative-amount
+          parameters: {order_id: 'negative-$run_id'}
+          request_body: {amount: -1}
+          expected_statuses: ['422']
+          expected_behavior: Negative monetary amounts must be rejected before a synthetic capture is recorded.
+          rationale: The controlled demo's published contract declares amount.minimum as 1; this check uses a unique synthetic order identifier.
         - name: Reject duplicate synthetic order capture
           category: duplicate-operation
           parameters: {order_id: 'order-$run_id'}

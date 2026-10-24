@@ -1,0 +1,38 @@
+
+  VITE v6.4.5  ready in 916 ms
+
+  ➜  Local:   http://127.0.0.1:5175/
+  ➜  press h + enter to show help
+2:09:31 am [vite] (client) page reload .codex-tmp/phase45-mock-api.err
+2:09:33 am [vite] (client) page reload .codex-tmp/phase45-mock-api.err
+2:09:33 am [vite] (client) page reload .codex-tmp/phase45-mock-vite.err
+2:09:46 am [vite] (client) page reload .codex-tmp/phase45-mock-api.err
+2:09:47 am [vite] (client) page reload .codex-tmp/phase45-mock-vite.err
+2:11:46 am [vite] (client) page reload .codex-tmp/phase45-mock-api.err
+2:22:08 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx, /src/styles.css
+2:22:21 am [vite] (client) page reload src/components/InvestigationPanel.test.tsx
+2:23:36 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx, /src/styles.css
+2:25:44 am [vite] (client) page reload src/components/InvestigationPanel.test.tsx
+2:38:00 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx, /src/styles.css
+2:55:37 am [vite] (client) page reload src/types.ts
+2:55:37 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx, /src/styles.css
+2:57:41 am [vite] (client) page reload src/components/InvestigationPanel.test.tsx
+2:57:46 am [vite] (client) page reload src/components/InvestigationPanel.test.tsx
+4:10:20 am [vite] (client) page reload src/types.ts
+4:10:20 am [vite] (client) hmr update /src/styles.css, /src/App.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\ApiExplorer.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx
+4:10:24 am [vite] (client) hmr update /src/styles.css, /src/App.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\ApiExplorer.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx
+4:11:02 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /src/styles.css
+4:11:07 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /src/styles.css
+4:11:20 am [vite] (client) hmr update /src/styles.css, /src/components/security-center.css
+4:17:42 am [vite] (client) page reload src/components/SecurityCenter.test.tsx
+4:18:34 am [vite] (client) page reload src/components/SecurityCenter.test.tsx
+4:25:10 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /src/styles.css
+4:25:28 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /src/styles.css
+4:26:06 am [vite] (client) page reload src/types.ts
+4:26:28 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\GitHubImportPanel.tsx, /src/styles.css
+4:26:32 am [vite] (client) hmr update /src/styles.css, /src/components/security-center.css
+4:30:29 am [vite] (client) page reload src/types.ts
+4:30:29 am [vite] (client) hmr update /src/styles.css, /src/App.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\SecurityCenter.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\ApiExplorer.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\InvestigationPanel.tsx, /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\GitHubImportPanel.tsx
+4:30:42 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\GitHubImportPanel.tsx, /src/styles.css
+4:32:09 am [vite] (client) hmr update /@fs/C:\Users\adith\OneDrive\Desktop\FailProof\frontend\src\components\GitHubImportPanel.tsx, /src/styles.css
+4:32:39 am [vite] (client) page reload src/components/SecurityCenter.test.tsx

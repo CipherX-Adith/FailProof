@@ -90,12 +90,12 @@ def _execution_items(method="GET", path="/health", body=None, statuses=None, par
 
 
 def test_http_execution_compares_status_and_sanitizes_evidence():
-    endpoint, case = _execution_items(method="POST", path="/validate", body={"password": "sensitive-value", "code": "abc"}, statuses=["200"])
-    transport = httpx.MockTransport(lambda request: httpx.Response(200, json={"token": "secret-value", "message": "Bearer secret-token"}))
+    endpoint, case = _execution_items(method="POST", path="/validate", body={"password": "sensitive-value", "code": "abc", "note": "api_key=inline-request-secret"}, statuses=["200"])
+    transport = httpx.MockTransport(lambda request: httpx.Response(200, json={"token": "secret-value", "message": "Bearer secret-token password=inline-response-secret", "url": "https://user:pass@example.test/resource"}))
     result = execute_case(_target(), endpoint, case, approve_non_safe=True, transport=transport)
     assert result["state"] == "passed"
     serialized = json.dumps(result["evidence"])
-    assert "sensitive-value" not in serialized and "secret-value" not in serialized and "secret-token" not in serialized
+    assert all(secret not in serialized for secret in ("sensitive-value", "secret-value", "secret-token", "inline-request-secret", "inline-response-secret", "user:pass"))
     assert result["actual_status"] == 200
 
 
