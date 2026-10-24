@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: FailProof Synthetic Demo API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8765
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Check demo API status
+      responses:
+        '200': {description: Healthy}
+  /validate:
+    post:
+      operationId: validateCode
+      summary: Validate a synthetic code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: {type: string, minLength: 5, example: PASS-123}
+      responses:
+        '200': {description: Accepted}
+        '422': {description: Invalid code}
+  /required:
+    post:
+      operationId: requiredReference
+      summary: Submit a required synthetic reference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reference]
+              properties:
+                reference: {type: string, minLength: 1, example: ref-demo-1}
+      responses:
+        '200': {description: Accepted}
+        '422': {description: Missing reference}
+  /users/{user_id}/documents/{document_id}:
+    get:
+      operationId: readSyntheticDocument
+      summary: Read a synthetic user's document
+      parameters:
+        - {name: user_id, in: path, required: true, schema: {type: string, example: alice}}
+        - {name: document_id, in: path, required: true, schema: {type: string, example: bob-private}}
+      x-failproof-test-cases:
+        - name: Enforce synthetic document ownership
+          category: authorization
+          parameters: {user_id: alice, document_id: bob-private}
+          expected_statuses: ['403']
+          expected_behavior: A user must not read another synthetic user's private document.
+          rationale: Explicit controlled-demo authorization rule; request uses only synthetic identifiers.
+      responses:
+        '200': {description: Document belongs to requesting user}
+        '403': {description: Document belongs to another user}
+        '404': {description: Document not found}
+  /orders/{order_id}/capture:
+    post:
+      operationId: captureSyntheticOrder
+      summary: Capture a synthetic order
+      parameters:
+        - {name: order_id, in: path, required: true, schema: {type: string, example: order-demo-1}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount: {type: integer, minimum: 1, example: 10}
+      x-failproof-test-cases:
+        - name: Reject duplicate synthetic order capture
+          category: duplicate-operation
+          parameters: {order_id: 'order-$run_id'}
+          request_body: {amount: 10}
+          expected_statuses: ['201', '409']
+          repetitions: 2
+          expected_behavior: First capture creates the state; a repeated capture is rejected without a duplicate operation.
+          rationale: Explicit controlled-demo transaction-state rule.
+      responses:
+        '201': {description: First capture created}
+        '409': {description: Duplicate capture rejected}
+        '422': {description: Invalid amount}

@@ -1,0 +1,8 @@
+INFO:     127.0.0.1:59046 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59049 - "POST /api/projects HTTP/1.1" 201 Created
+INFO:     127.0.0.1:59050 - "POST /api/projects/662fb0f5-898b-47b3-9abe-3412b10b53c3/targets HTTP/1.1" 201 Created
+INFO:     127.0.0.1:59051 - "POST /api/targets/0a5c8195-0a1d-4705-863f-3e1ea01d0aa3/specifications?filename=openapi.yaml HTTP/1.1" 201 Created
+INFO:     127.0.0.1:59052 - "POST /api/targets/0a5c8195-0a1d-4705-863f-3e1ea01d0aa3/tests/generate HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59053 - "GET /api/targets/0a5c8195-0a1d-4705-863f-3e1ea01d0aa3/endpoints HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59055 - "POST /api/targets/0a5c8195-0a1d-4705-863f-3e1ea01d0aa3/runs HTTP/1.1" 201 Created
+INFO:     127.0.0.1:59057 - "GET /api/runs/453357eb-9a30-4710-86f9-4dd58cd555a8 HTTP/1.1" 200 OK
